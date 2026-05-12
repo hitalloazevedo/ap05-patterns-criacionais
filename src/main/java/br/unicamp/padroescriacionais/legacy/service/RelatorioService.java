@@ -12,12 +12,11 @@ import java.time.LocalDateTime;
 
 public class RelatorioService {
 
-    private ConfiguracaoSistema configuracao = new ConfiguracaoSistema(
-            "Empresa XPTO",
-            "DEV",
-            "/tmp/relatorios",
-            false
-    );
+    private final ConfiguracaoSistema configuracao;
+    
+    public RelatorioService(ConfiguracaoSistema configuracao) {
+        this.configuracao = configuracao;
+    }
 
     public Relatorio criarRelatorio(TipoRelatorio tipo) {
         String titulo;

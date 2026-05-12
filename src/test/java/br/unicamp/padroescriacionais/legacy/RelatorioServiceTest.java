@@ -1,11 +1,15 @@
 package br.unicamp.padroescriacionais.legacy;
 
+import br.unicamp.padroescriacionais.legacy.domain.ConfiguracaoSistema;
+import br.unicamp.padroescriacionais.legacy.domain.Environment;
 import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.domain.TipoRelatorio;
 import br.unicamp.padroescriacionais.legacy.service.RelatorioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +19,23 @@ class RelatorioServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new RelatorioService();
+        resetSingletons();
+        ConfiguracaoSistema config = ConfiguracaoSistema.getInstance(Environment.DEV);
+        service = new RelatorioService(config);
+    }
+
+    private void resetSingletons() {
+        try {
+            Field dev = ConfiguracaoSistema.class.getDeclaredField("devInstance");
+            dev.setAccessible(true);
+            dev.set(null, null);
+
+            Field prod = ConfiguracaoSistema.class.getDeclaredField("prodInstance");
+            prod.setAccessible(true);
+            prod.set(null, null);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

@@ -1,5 +1,7 @@
 package br.unicamp.padroescriacionais.legacy;
 
+import br.unicamp.padroescriacionais.legacy.domain.ConfiguracaoSistema;
+import br.unicamp.padroescriacionais.legacy.domain.Environment;
 import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.domain.TipoRelatorio;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,10 +27,26 @@ class ExportacaoServiceTest {
 
     @BeforeEach
     void setUp() {
-        exportacaoService = new ExportacaoService();
-        relatorioService = new RelatorioService();
+        resetSingletons();
+        ConfiguracaoSistema config = ConfiguracaoSistema.getInstance(Environment.DEV);
+        exportacaoService = new ExportacaoService(config);
+        relatorioService = new RelatorioService(config);
         saidaCapturada = new ByteArrayOutputStream();
         System.setOut(new PrintStream(saidaCapturada));
+    }
+
+    private void resetSingletons() {
+        try {
+            Field dev = ConfiguracaoSistema.class.getDeclaredField("devInstance");
+            dev.setAccessible(true);
+            dev.set(null, null);
+
+            Field prod = ConfiguracaoSistema.class.getDeclaredField("prodInstance");
+            prod.setAccessible(true);
+            prod.set(null, null);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @AfterEach
