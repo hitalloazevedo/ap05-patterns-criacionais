@@ -9,12 +9,11 @@ import br.unicamp.padroescriacionais.legacy.generator.PdfRelatorioGenerator;
 
 public class ExportacaoService {
 
-    private ConfiguracaoSistema configuracao = new ConfiguracaoSistema(
-            "Empresa XPTO Ltda.",
-            "PROD",
-            "/var/exports/relatorios",
-            false
-    );
+    private final ConfiguracaoSistema configuracao;
+
+    public ExportacaoService(ConfiguracaoSistema configuracao) {
+        this.configuracao = configuracao;
+    }
 
     public void exportar(Relatorio relatorio, FormatoRelatorio formato) {
         String conteudoFormatado;

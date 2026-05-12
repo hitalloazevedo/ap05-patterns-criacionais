@@ -1,5 +1,7 @@
 package br.unicamp.padroescriacionais.legacy;
 
+import br.unicamp.padroescriacionais.legacy.domain.ConfiguracaoSistema;
+import br.unicamp.padroescriacionais.legacy.domain.Environment;
 import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.domain.TipoRelatorio;
@@ -12,9 +14,12 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        RelatorioService relatorioService = new RelatorioService();
-        ExportacaoService exportacaoService = new ExportacaoService();
-        ConfiguracaoService configuracaoService = new ConfiguracaoService();
+
+        ConfiguracaoSistema config = ConfiguracaoSistema.getInstance(Environment.PROD);
+
+        RelatorioService relatorioService = new RelatorioService(config);
+        ExportacaoService exportacaoService = new ExportacaoService(config);
+        ConfiguracaoService configuracaoService = new ConfiguracaoService(config);
 
         Scanner scanner = new Scanner(System.in);
 
