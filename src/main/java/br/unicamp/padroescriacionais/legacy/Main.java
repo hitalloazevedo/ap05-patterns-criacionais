@@ -5,6 +5,7 @@ import br.unicamp.padroescriacionais.legacy.domain.Environment;
 import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.domain.TipoRelatorio;
+import br.unicamp.padroescriacionais.legacy.generator.RelatorioGeneratorFactory;
 import br.unicamp.padroescriacionais.legacy.service.ConfiguracaoService;
 import br.unicamp.padroescriacionais.legacy.service.ExportacaoService;
 import br.unicamp.padroescriacionais.legacy.service.RelatorioService;
@@ -17,8 +18,9 @@ public class Main {
 
         ConfiguracaoSistema config = ConfiguracaoSistema.getInstance(Environment.PROD);
 
-        RelatorioService relatorioService = new RelatorioService(config);
-        ExportacaoService exportacaoService = new ExportacaoService(config);
+        RelatorioGeneratorFactory generatorFactory = new RelatorioGeneratorFactory();
+        RelatorioService relatorioService = new RelatorioService(config, generatorFactory);
+        ExportacaoService exportacaoService = new ExportacaoService(config, generatorFactory);
         ConfiguracaoService configuracaoService = new ConfiguracaoService(config);
 
         Scanner scanner = new Scanner(System.in);
@@ -106,12 +108,16 @@ public class Main {
         System.out.println("  1. PDF");
         System.out.println("  2. CSV");
         System.out.println("  3. JSON");
+        System.out.println("  4. XML");
+        System.out.println("  5. HTML");
         System.out.print("Escolha: ");
 
         return switch (lerInteiro(scanner)) {
             case 1 -> FormatoRelatorio.PDF;
             case 2 -> FormatoRelatorio.CSV;
             case 3 -> FormatoRelatorio.JSON;
+            case 4 -> FormatoRelatorio.XML;
+            case 5 -> FormatoRelatorio.HTML;
             default -> {
                 System.out.println("Formato invalido.");
                 yield null;
